@@ -10,6 +10,24 @@ load_dotenv()
 USERNAME = os.getenv("USERNAME")
 PASSWORD = os.getenv("PASSWORD")
 
+SITIO = os.getenv("SITIO")
+ZONA = os.getenv("ZONA")
+
+AÑO = os.getenv("AÑO")
+MES = os.getenv("MES")
+DIA = os.getenv("DIA")
+
+HORA_INICIO = os.getenv("HORA_INICIO")
+MIN_INICIO = os.getenv("MIN_INICIO")
+SEC_INICIO = os.getenv("SEC_INICIO")
+
+HORA_FIN = os.getenv("HORA_FIN")
+MIN_FIN = os.getenv("MIN_FIN")
+SEC_FIN = os.getenv("SEC_FIN")
+
+
+
+'''
 parser = argparse.ArgumentParser(description="Un bot estupidamente sexy")
 parser.add_argument("-a", "--año", help="Año")
 parser.add_argument("-m", "--mes", help="Mes")
@@ -19,6 +37,7 @@ parser.add_argument("-mi" "--minuto_inicio", help="Minuto inicio")
 parser.add_argument("-hf", "--hora_fin", help="Hora fin")
 parser.add_argument("-mf", "--minuto_final", help="Minuto final")
 parser.add_argument("-id", "--id", help="Sitio ID")
+'''
 
 
 login_url = "https://servicioscampus.unavarra.es/resSalas/Web/index.php"
@@ -35,17 +54,17 @@ payload = {
     'password': PASSWORD,
     'login': 'submit',
     'resume': '/resSalas/Web/reservation.php?rid={SITIO}&sid={ZONA}&rd={AÑO}-{MES}-{DIA}&sd={AÑO}-{MES}-{DIA} {HORA_INICIO}:{MIN_INICIO}:{SEC_INICIO}&ed={AÑO}-{MES}-{DIA} {HORA_FIN}:{MIN_FIN}:{SEC_FIN}'.format(
-        SITIO=227,
-        ZONA=8,
-        AÑO=2020,
-        MES=11,
-        DIA=27,
-        HORA_INICIO=14,
-        MIN_INICIO=00,
-        SEC_INICIO=00,
-        HORA_FIN=14,
-        MIN_FIN=30,
-        SEC_FIN=00
+        SITIO=SITIO,
+        ZONA=ZONA,
+        AÑO=AÑO,
+        MES=MES,
+        DIA=DIA,
+        HORA_INICIO=HORA_INICIO,
+        MIN_INICIO=MIN_INICIO,
+        SEC_INICIO=SEC_INICIO,
+        HORA_FIN=HORA_FIN,
+        MIN_FIN=MIN_FIN,
+        SEC_FIN=SEC_FIN
     )
 }
 
@@ -57,6 +76,8 @@ with requests.Session() as session:
     #print(petition.cookies)
 
     soup = BeautifulSoup(petition.text, 'lxml')
+
+    #print(soup)
 
     begin, end = soup.find_all('option', {'selected': 'selected'})
 
@@ -157,6 +178,41 @@ For checkout:
 
 ----------------------------------------------------------------------------------------------------------
     PARAMS: referenceNumber=5fbdf1756e815641941435&CSRF_TOKEN=OWQ3ZTM4NjAzMmJmZGMwNWI0NGFjMmJkODZkZmZmZjA=
+
+For checkout:
+    POST: https://servicioscampus.unavarra.es/resSalas/Web/ajax/reservation_checkin.php?action=checkin
+----------------------------------------------------------------------------------------------------------
+    Host: servicioscampus.unavarra.es
+
+    User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0
+
+    Accept: */*
+
+    Accept-Language: en-GB,en;q=0.5
+
+    Accept-Encoding: gzip, deflate, br
+
+    Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+    X-Requested-With: XMLHttpRequest
+
+    Content-Length: 96
+
+    Origin: https://servicioscampus.unavarra.es
+
+    DNT: 1
+
+    Connection: keep-alive
+
+    Referer: https://servicioscampus.unavarra.es/resSalas/Web/dashboard.php
+
+    Cookie: PHPSESSID=q7jufk1jnjqre92d9e4op24p2h; resource_filter2=%7B%22ScheduleId%22%3A%222%22%2C%22ResourceIds%22%3A%5B%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; schedule_calendar_toggle=false; language=en_gb; resource_filter8=%7B%22ScheduleId%22%3A%228%22%2C%22ResourceIds%22%3A%5B%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; resource_filter7=%7B%22ScheduleId%22%3A%227%22%2C%22ResourceIds%22%3A%5B%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; UPNANODE=balancer.fagus1
+
+--------------------------------------------------------------------------------------------------------------
+    referenceNumber=5fbe0919ab4f3914032167&CSRF_TOKEN=ODRiYzczNjY3NDU5MDg4YzE0YmQyYmM5MDA2ZjYzMmU=
+
+    In dashboard.php:
+        csfr_token (id="csfr_token") is inside the checkin form (id="form-checkin")
 """
 
 # TODO: Capturar peticion de checkin
