@@ -1,4 +1,3 @@
-from logging import error
 import requests
 import os
 from dotenv import load_dotenv
@@ -46,8 +45,8 @@ dashboard_url = "https://servicioscampus.unavarra.es/resSalas/Web/dashboard.php"
 
 reservation_url = "https://servicioscampus.unavarra.es/resSalas/Web/ajax/reservation_save.php"
 
-# ALUM-B: sid=8
-# ALUM-C: sid=9
+# ALUM-B2: sid=18
+# ALUM-C2: sid=19
 
 payload = {
     'email': USERNAME,
@@ -146,73 +145,109 @@ with requests.Session() as session:
 
     #print(petition.text, petition)
 
-"""
-For checkout:
-    POST: https://servicioscampus.unavarra.es/resSalas/Web/ajax/reservation_checkin.php?action=checkout
---------------------------------------------------------------------------------------------------------
-    Host: servicioscampus.unavarra.es
+checkin_url = "https://servicioscampus.unavarra.es/resSalas/Web/ajax/reservation_checkin.php?action=checkin"
 
-    User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0
+params = {
+    "Same as": "reservation",
+    "but we know": "the reference number",
+    "and action is": "update"
+}
 
-    Accept: */*
+"""(Chekin)
+POST: https://servicioscampus.unavarra.es/resSalas/Web/ajax/reservation_checkin.php?action=checkin
+---------------------------------------------------------------------------------------------
+Host: servicioscampus.unavarra.es
 
-    Accept-Language: en-GB,en;q=0.5
+User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0
 
-    Accept-Encoding: gzip, deflate, br
+Accept: */*
 
-    Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Accept-Language: en-GB,en;q=0.5
 
-    X-Requested-With: XMLHttpRequest
+Accept-Encoding: gzip, deflate, br
 
-    Content-Length: 96
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
-    Origin: https://servicioscampus.unavarra.es
+X-Requested-With: XMLHttpRequest
 
-    DNT: 1
+Content-Length: 348
 
-    Connection: keep-alive
+Origin: https://servicioscampus.unavarra.es
 
-    Referer: https://servicioscampus.unavarra.es/resSalas/Web/dashboard.php
+DNT: 1
 
-    Cookie: PHPSESSID=304rk1ooe3ej79g1d4tp3p9h42; resource_filter2=%7B%22ScheduleId%22%3A%222%22%2C%22ResourceIds%22%3A%5B%228%22%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; schedule_calendar_toggle=false; resource_filter16=%7B%22ScheduleId%22%3A%2216%22%2C%22ResourceIds%22%3A%5B%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; language=en_gb; resource_filter8=%7B%22ScheduleId%22%3A%228%22%2C%22ResourceIds%22%3A%5B%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; resource_filter9=%7B%22ScheduleId%22%3A%229%22%2C%22ResourceIds%22%3A%5B%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; UPNANODE=balancer.fagus1; tree2={"open_nodes":["1","2","11"],"selected_node":"12"}; tree16={"open_nodes":["11"],"selected_node":"15"}
+Connection: keep-alive
 
-----------------------------------------------------------------------------------------------------------
-    PARAMS: referenceNumber=5fbdf1756e815641941435&CSRF_TOKEN=OWQ3ZTM4NjAzMmJmZGMwNWI0NGFjMmJkODZkZmZmZjA=
+Referer: https://servicioscampus.unavarra.es/resSalas/Web/reservation.php?rn=5fbf862dda391077636423
 
-For checkout:
-    POST: https://servicioscampus.unavarra.es/resSalas/Web/ajax/reservation_checkin.php?action=checkin
-----------------------------------------------------------------------------------------------------------
-    Host: servicioscampus.unavarra.es
+Cookie: PHPSESSID=dghehcrofqlrpp409v3ars4rrc; resource_filter2=%7B%22ScheduleId%22%3A%222%22%2C%22ResourceIds%22%3A%5B%229%22%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; schedule_calendar_toggle=false; language=en_gb; resource_filter9=%7B%22ScheduleId%22%3A%229%22%2C%22ResourceIds%22%3A%5B%229%22%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; resource_filter8=%7B%22ScheduleId%22%3A%228%22%2C%22ResourceIds%22%3A%5B%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; resource_filter7=%7B%22ScheduleId%22%3A%227%22%2C%22ResourceIds%22%3A%5B%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; resource_filter10=%7B%22ScheduleId%22%3A%2210%22%2C%22ResourceIds%22%3A%5B%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; resource_filter12=%7B%22ScheduleId%22%3A%2212%22%2C%22ResourceIds%22%3A%5B%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; UPNANODE=balancer.fagus1; tree2={"open_nodes":["1","2"],"selected_node":""}
+------------------------------------------------------------------------------------------------
 
-    User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0
-
-    Accept: */*
-
-    Accept-Language: en-GB,en;q=0.5
-
-    Accept-Encoding: gzip, deflate, br
-
-    Content-Type: application/x-www-form-urlencoded; charset=UTF-8
-
-    X-Requested-With: XMLHttpRequest
-
-    Content-Length: 96
-
-    Origin: https://servicioscampus.unavarra.es
-
-    DNT: 1
-
-    Connection: keep-alive
-
-    Referer: https://servicioscampus.unavarra.es/resSalas/Web/dashboard.php
-
-    Cookie: PHPSESSID=q7jufk1jnjqre92d9e4op24p2h; resource_filter2=%7B%22ScheduleId%22%3A%222%22%2C%22ResourceIds%22%3A%5B%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; schedule_calendar_toggle=false; language=en_gb; resource_filter8=%7B%22ScheduleId%22%3A%228%22%2C%22ResourceIds%22%3A%5B%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; resource_filter7=%7B%22ScheduleId%22%3A%227%22%2C%22ResourceIds%22%3A%5B%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; UPNANODE=balancer.fagus1
-
---------------------------------------------------------------------------------------------------------------
-    referenceNumber=5fbe0919ab4f3914032167&CSRF_TOKEN=ODRiYzczNjY3NDU5MDg4YzE0YmQyYmM5MDA2ZjYzMmU=
-
-    In dashboard.php:
-        csfr_token (id="csfr_token") is inside the checkin form (id="form-checkin")
+userId=6909&beginDate=2020-11-26&beginPeriod=12:00:00&endDate=2020-11-26&endPeriod=12:30:00&scheduleId=7&resourceId=60&reservationTitle=&reservationDescription=&reservationId=64381&referenceNumber=5fbf862dda391077636423&reservationAction=update&DELETE_REASON=&seriesUpdateScope=full&CSRF_TOKEN=ZmMwMjEzMzgxOGFkOTAwZmQwZDhkNzM5OGJmMDQ5MDQ=
 """
 
-# TODO: Capturar peticion de checkin
+"""(Checkout)
+POST: https://servicioscampus.unavarra.es/resSalas/Web/ajax/reservation_checkin.php?action=checkout
+---------------------------------------------------------------------------------------------
+Host: servicioscampus.unavarra.es
+
+User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0
+
+Accept: */*
+
+Accept-Language: en-GB,en;q=0.5
+
+Accept-Encoding: gzip, deflate, br
+
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+X-Requested-With: XMLHttpRequest
+
+Content-Length: 348
+
+Origin: https://servicioscampus.unavarra.es
+
+DNT: 1
+
+Connection: keep-alive
+
+Referer: https://servicioscampus.unavarra.es/resSalas/Web/reservation.php?rn=5fbf862dda391077636423
+
+Cookie: PHPSESSID=dghehcrofqlrpp409v3ars4rrc; resource_filter2=%7B%22ScheduleId%22%3A%222%22%2C%22ResourceIds%22%3A%5B%229%22%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; schedule_calendar_toggle=false; language=en_gb; resource_filter9=%7B%22ScheduleId%22%3A%229%22%2C%22ResourceIds%22%3A%5B%229%22%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; resource_filter8=%7B%22ScheduleId%22%3A%228%22%2C%22ResourceIds%22%3A%5B%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; resource_filter7=%7B%22ScheduleId%22%3A%227%22%2C%22ResourceIds%22%3A%5B%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; resource_filter10=%7B%22ScheduleId%22%3A%2210%22%2C%22ResourceIds%22%3A%5B%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; resource_filter12=%7B%22ScheduleId%22%3A%2212%22%2C%22ResourceIds%22%3A%5B%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; UPNANODE=balancer.fagus1; tree2={"open_nodes":["1","2"],"selected_node":""}
+---------------------------------------------------------------------------------------------
+
+userId=6909&beginDate=2020-11-26&beginPeriod=12:00:00&endDate=2020-11-26&endPeriod=13:00:00&scheduleId=7&resourceId=60&reservationTitle=&reservationDescription=&reservationId=64381&referenceNumber=5fbf862dda391077636423&reservationAction=update&DELETE_REASON=&seriesUpdateScope=full&CSRF_TOKEN=ZmMwMjEzMzgxOGFkOTAwZmQwZDhkNzM5OGJmMDQ5MDQ=
+"""
+
+"""(Update)
+POST: https://servicioscampus.unavarra.es/resSalas/Web/ajax/reservation_update.php
+---------------------------------------------------------------------------------------------
+Host: servicioscampus.unavarra.es
+
+User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0
+
+Accept: */*
+
+Accept-Language: en-GB,en;q=0.5
+
+Accept-Encoding: gzip, deflate, br
+
+X-Requested-With: XMLHttpRequest
+
+Content-Type: multipart/form-data; boundary=---------------------------324595901814777109141057376799
+
+Content-Length: 1962
+
+Origin: https://servicioscampus.unavarra.es
+
+DNT: 1
+
+Connection: keep-alive
+
+Referer: https://servicioscampus.unavarra.es/resSalas/Web/reservation.php?rn=5fbf862dda391077636423
+
+Cookie: PHPSESSID=dghehcrofqlrpp409v3ars4rrc; resource_filter2=%7B%22ScheduleId%22%3A%222%22%2C%22ResourceIds%22%3A%5B%229%22%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; schedule_calendar_toggle=false; language=en_gb; resource_filter9=%7B%22ScheduleId%22%3A%229%22%2C%22ResourceIds%22%3A%5B%229%22%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; resource_filter8=%7B%22ScheduleId%22%3A%228%22%2C%22ResourceIds%22%3A%5B%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; resource_filter7=%7B%22ScheduleId%22%3A%227%22%2C%22ResourceIds%22%3A%5B%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; resource_filter10=%7B%22ScheduleId%22%3A%2210%22%2C%22ResourceIds%22%3A%5B%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; resource_filter12=%7B%22ScheduleId%22%3A%2212%22%2C%22ResourceIds%22%3A%5B%5D%2C%22ResourceTypeId%22%3Anull%2C%22MinCapacity%22%3Anull%2C%22ResourceAttributes%22%3A%5B%5D%2C%22ResourceTypeAttributes%22%3A%5B%5D%7D; UPNANODE=balancer.fagus1; tree2={"open_nodes":["1","2"],"selected_node":""}
+------------------------------------------------------------------------------------------------
+
+userId=6909&beginDate=2020-11-26&beginPeriod=12:00:00&endDate=2020-11-26&endPeriod=13:00:00&scheduleId=7&resourceId=60&reservationTitle=&reservationDescription=&reservationId=64381&referenceNumber=5fbf862dda391077636423&reservationAction=update&DELETE_REASON=&seriesUpdateScope=full&CSRF_TOKEN=ZmMwMjEzMzgxOGFkOTAwZmQwZDhkNzM5OGJmMDQ5MDQ=
+"""
