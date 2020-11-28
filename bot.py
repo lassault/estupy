@@ -1,7 +1,5 @@
 import logging
 import os
-from aiogram.types import message
-from aiogram.types import user
 import requests
 import delegator
 import analyzer
@@ -45,10 +43,11 @@ async def reservar(message: types.Message):
     if str(user_id) not in USER_ID:
         await message.answer_animation("https://media.giphy.com/media/xT5LMNO5vF6dBrxY3e/giphy.gif")
     else:
-        reservar = "./estupy_forced"
-        log = delegator.run(reservar).out
+        reservar = "./estupy_forced >> estupy.log"
+        log = delegator.run(reservar)
 
-        #print(log)
+        last_log = "tac estupy.log | grep -F -m1 -B 1000 '===================================' | head -n 4 | tac | awk 'NR==1,NR==$NR'"
+        log = delegator.run(last_log).out
 
         text = analyzer.analyze_log(log)
 
@@ -61,12 +60,14 @@ async def github(message: types.Message):
     if str(user_id) not in USER_ID:
         await message.answer_animation("https://media.giphy.com/media/QRB6F0x3ptYHu/giphy.gif")
     else:
-        last_cron = "tac estupy.log | grep -F -m1 -B 1000 '===================================' | head -n 4 | tac"
+        last_cron = "tac estupy.log | grep -F -m1 -B 1000 '===================================' | head -n 4 | tac | awk 'NR==1,NR==$NR'"
         log = delegator.run(last_cron).out
+        
+        try:
+            text = analyzer.analyze_log(log)
+        except:
+            text = "No has realizado ninguna reserva\nPuedes hacer una escribiendo /reservar"
 
-        #print(log)
-
-        text = analyzer.analyze_log(log)
 
         await message.reply(text)
 

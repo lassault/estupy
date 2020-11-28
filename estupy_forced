@@ -1,5 +1,5 @@
 #!/bin/bash
 
-date
-echo ''
-python3.7 $HOME/Desktop/estupy/estupy.py
+echo '==================================='
+date --rfc-3339=s
+python3.7 $HOME/estupy/estupy.py | awk 'NF'
