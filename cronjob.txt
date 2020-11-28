@@ -1,0 +1,1 @@
+*/30 9-21 * * * $HOME/estupy/estupy >> $HOME/estupy/estupy.log 2>>$HOME/estupy/estupy.log
