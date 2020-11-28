@@ -1,0 +1,10 @@
+#!/bin/bash
+
+SERVICE=estupy
+
+LOG_FILE=/var/log/syslog
+
+echo '==================================='
+grep $SERVICE $LOG_FILE | tail -1
+echo ''
+python3.7 $HOME/estupy/estupy.py
