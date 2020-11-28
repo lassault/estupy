@@ -49,7 +49,14 @@ async def reservar(message: types.Message):
         last_log = "tac estupy.log | grep -F -m1 -B 1000 '===================================' | head -n 4 | tac | awk 'NR==1,NR==$NR'"
         log = delegator.run(last_log).out
 
-        text = analyzer.analyze_log(log)
+        command = "date --rfc-3339=s"
+        timestamp = delegator.run(command).out
+
+        date, time = analyzer.analyze_date(timestamp)
+
+        date, start, end = analyzer.filter_date(date, time)
+
+        text = analyzer.analyze_log_ext(log, date, start, end)
 
         await message.reply(text)
 

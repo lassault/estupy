@@ -1,8 +1,31 @@
-from re import purge
-import delegator
 import re
 from datetime import datetime
-from calendar import month, monthrange
+from calendar import monthrange
+
+def analyze_log_ext(log_message, date, start, end):
+    log_lines = [line for line in log_message.split('\n') if line.split()]
+
+    status = log_lines[1]
+    info = log_lines[2:]
+
+    reference = re.search(r'[a-f,0-9]{22}$', info[0])
+
+    start = datetime(date.year, date.month, date.day, start.hour, start.minute, start.second)
+    end = datetime(date.year, date.month, date.day, end.hour, end.minute, end.second)
+
+    date = datetime.strftime(date, '%d-%m-%Y')
+    start = datetime.strftime(start, '%H:%M:%S')
+    end = datetime.strftime(end, '%H:%M:%S')
+
+    time = "{DATE}: {START} - {END}".format(DATE=date, START=start, END=end)
+
+    try:
+        reference = reference.group()
+        text = ("🕛 {TIME}\nStatus: {STATUS} ✔️\nReference: {REFERENCE}".format(TIME=time, STATUS=status, REFERENCE=reference))
+    except:
+        text = ("🕛 {TIME}\nStatus: {STATUS} ❌\n{INFO}".format(TIME=time, STATUS=status, INFO=info[0] + " " + info[1]))
+
+    return text
 
 def analyze_log(log_message):
     log_lines = [line for line in log_message.split('\n') if line.split()]
