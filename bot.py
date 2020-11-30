@@ -1,11 +1,15 @@
 import logging
 import os
+from aiogram.dispatcher.filters.builtin import Command
+from aiogram.types import user
 import requests
 import delegator
 import analyzer
 
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher, executor, types
+
+from analyzer import analyze_log, analyze_log_ext
 
 load_dotenv()
 
@@ -20,12 +24,26 @@ bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
 
 
-@dp.message_handler(commands=['start', 'help'])
+@dp.message_handler(commands=['start'])
 async def send_welcome(message: types.Message):
     '''
     This handler will be called when user sends `/start` or `/help` command
     '''
-    await message.reply("Hi!\nI'm EchoBot! 🤖\nPowered by aiogram and made by @lassa97")
+    await message.answer("Hi! I'm estupy! 🤖\nA stupidly sexy bot made by @lassa97")
+
+
+@dp.message_handler(commands=['help'])
+async def send_help(message: types.Message):
+    text = [
+        "Ask me anything I can do:",
+        "{command} - Start a conversation".format(command="/start"),
+        "{command} - Give me alcohol".format(command="/drink"),
+        "{command} - Show me the available commands".format(command="/help"),
+        "{command} - Show me the last attempt".format(command="/log"),
+        "{command} - Try to make a new reservation".format(command="/reservation"),
+        ""
+    ]
+    await message.answer("\n".join(text))
 
 
 @dp.message_handler(commands=['drink'])
@@ -35,8 +53,8 @@ async def send_drink(message: types.Message):
     drink_photo = cocktail['drinks'][0]['strDrinkThumb']
     await message.reply_photo(drink_photo, caption=drink)
 
-@dp.message_handler(commands=['reservar'])
-async def reservar(message: types.Message):
+@dp.message_handler(commands=['reservation'])
+async def make_reservation(message: types.Message):
 
     user_id = message.from_user.id
 
@@ -58,10 +76,12 @@ async def reservar(message: types.Message):
 
         text = analyzer.analyze_log_ext(log, date, start, end)
 
+        #text = "{NAME} {SURNAME} {STATUS}".format(NAME=message.from_user.first_name, SURNAME=message.from_user.last_name, STATUS=analyzer.analyze_log_ext(log, date, start, end))
+
         await message.reply(text)
 
 @dp.message_handler(commands=['log'])
-async def github(message: types.Message):
+async def send_log(message: types.Message):
 
     user_id = message.from_user.id
     if str(user_id) not in USER_ID:
@@ -71,15 +91,18 @@ async def github(message: types.Message):
         log = delegator.run(last_cron).out
         
         try:
-            text = analyzer.analyze_log(log)
+            text = analyze_log(log)
+            #text = "{NAME} {SURNAME} {STATUS}".format(NAME=message.from_user.first_name, SURNAME=message.from_user.last_name, STATUS=analyze_log(log))
         except:
             text = "No has realizado ninguna reserva\nPuedes hacer una escribiendo /reservar"
+            #status = "No has realizado ninguna reserva\nPuedes hacer una escribiendo /reservar"
+            #text = "{NAME} {SURNAME} {STATUS}".format(NAME=message.from_user.first_name, SURNAME=message.from_user.last_name, STATUS=status)
 
 
         await message.reply(text)
 
 @dp.message_handler()
-async def echo(message: types.Message):
+async def send_echo(message: types.Message):
     # old style:
     # await bot.send_message(message.chat.id, message.text)
 

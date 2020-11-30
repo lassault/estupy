@@ -4,6 +4,10 @@ from calendar import monthrange
 
 def analyze_log_ext(log_message, date, start, end):
     log_lines = [line for line in log_message.split('\n') if line.split()]
+    try:
+        log_lines.remove("===================================")
+    except:
+        pass
 
     status = log_lines[1]
     info = log_lines[2:]
@@ -29,6 +33,10 @@ def analyze_log_ext(log_message, date, start, end):
 
 def analyze_log(log_message):
     log_lines = [line for line in log_message.split('\n') if line.split()]
+    try:
+        log_lines.remove("===================================")
+    except:
+        pass
 
     status = log_lines[1]
     info = log_lines[2:]
