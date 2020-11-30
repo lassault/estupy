@@ -1,0 +1,72 @@
+#!/bin/bash
+
+echo "Trying section B2..."
+echo "--------------------"
+#Zona 18: 162 - 237
+ZONA=18
+
+for SITIO in {237..162}
+do
+	echo "Sitio:$SITIO Zona:$ZONA"
+	#python3.7 $HOME/estupy/estupy.py $SITIO $ZONA
+done
+echo
+
+echo "Trying section C2..."
+echo "--------------------"
+#Zona 19: 292 - 367
+ZONA=19
+
+for SITIO in {367..292}
+do
+	echo "Sitio:$SITIO Zona:$ZONA"
+	#python3.7 $HOME/estupy/estupy.py $SITIO $ZONA
+done
+echo
+
+echo "Trying section B1..."
+echo "--------------------"
+#Zona 8: 108 - 161
+ZONA=8
+
+for SITIO in {161..108}
+do
+	echo "Sitio:$SITIO Zona:$ZONA"
+	#python3.7 $HOME/estupy/estupy.py $SITIO $ZONA
+done
+echo
+
+echo "Trying section C1..."
+echo "--------------------"
+#Zona 9: 238 - 291
+ZONA=9
+
+for SITIO in {291..238}
+do
+	echo "Sitio:$SITIO Zona:$ZONA"
+	#python3.7 $HOME/estupy/estupy.py $SITIO $ZONA
+done
+echo
+
+echo "Trying section A..."
+echo "-------------------"
+#Zona 7: 58 - 107
+ZONA=7
+
+for SITIO in {107..58}
+do
+	echo "Sitio:$SITIO Zona:$ZONA"
+	#python3.7 $HOME/estupy/estupy.py $SITIO $ZONA
+done
+echo
+
+echo "Trying section D..."
+echo "-------------------"
+#Zona 10: 368 - 414
+ZONA=10
+
+for SITIO in {414..368}
+do
+	echo "Sitio:$SITIO Zona:$ZONA"
+	#python3.7 $HOME/estupy/estupy.py $SITIO $ZONA
+done

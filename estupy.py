@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import delegator
 import argparse
 import analyzer
+import sys
 
 # Obtener los parametros a mano
 
@@ -13,8 +14,12 @@ load_dotenv()
 EMAIL = os.getenv("EMAIL")
 PASSWORD = os.getenv("PASSWORD")
 
-SITIO = os.getenv("SITIO")
-ZONA = os.getenv("ZONA")
+try:
+    SITIO = sys.argv[1]
+    ZONA = sys.argv[2]
+except:
+    SITIO = os.getenv("SITIO")
+    ZONA = os.getenv("ZONA")
 
 '''
 AÑO = os.getenv("AÑO")
