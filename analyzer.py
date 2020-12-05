@@ -1,107 +1,82 @@
+from calendar import month, monthrange
+from os import stat
 import re
 from datetime import datetime
 from calendar import monthrange
 
-def analyze_log_ext(log_message, date, start, end):
-    log_lines = [line for line in log_message.split('\n') if line.split()]
-    try:
-        log_lines.remove("===================================")
-    except:
-        pass
+class Analyzer:
 
-    status = log_lines[1]
-    info = log_lines[2:]
+    @staticmethod
+    def filter_date(date, time, days, minutes):
+        # Add n days to current date, check if we have to change the month or the year
+        try:
+            date = date.replace(day=date.day + days)
+        except:
+            max_days = monthrange(date.year, date.month)[1]
 
-    reference = re.search(r'[a-f,0-9]{22}$', info[0])
+            day = (date.day + days) - max_days
 
-    start = datetime(date.year, date.month, date.day, start.hour, start.minute, start.second)
-    end = datetime(date.year, date.month, date.day, end.hour, end.minute, end.second)
+            try:
+                date = date.replace(day=day, month=date.month + 1)
+            except:
+                date = date.replace(day=day, month=1, year=date.year + 1)
 
-    date = datetime.strftime(date, '%d-%m-%Y')
-    start = datetime.strftime(start, '%H:%M:%S')
-    end = datetime.strftime(end, '%H:%M:%S')
+        # Set the end time to 00 or 30 minutes, depending of which one is closer to the current time
+        i = int(time.minute / minutes)
 
-    time = "{DATE}: {START} - {END}".format(DATE=date, START=start, END=end)
+        end = time.replace(minute=i*minutes, second=00)
 
-    try:
-        reference = reference.group()
-        text = ("🕛 {TIME}\nStatus: {STATUS} ✔️\nReference: {REFERENCE}".format(TIME=time, STATUS=status, REFERENCE=reference))
-    except:
-        text = ("🕛 {TIME}\nStatus: {STATUS} ❌\n{INFO}".format(TIME=time, STATUS=status, INFO=info[0] + " " + info[1]))
+        # Get the start time, substracting 30 minutes to the end time
+        try:
+            start = end.replace(minute=end.minute - minutes)
+        except:
+            start = end.replace(hour=end.hour - 1, minute=(end.minute - minutes) % 60)
+        
+        return date, start, end
 
-    return text
+    @staticmethod
+    def analyze_log(message):
+        message = message.rstrip().split('\n')
+        try:
+            message.remove("===================================")
+        except:
+            pass
 
-def analyze_log(log_message):
-    log_lines = [line for line in log_message.split('\n') if line.split()]
-    try:
-        log_lines.remove("===================================")
-    except:
-        pass
+        status = message[1]
+        info = message[2:]
 
-    status = log_lines[1]
-    info = log_lines[2:]
+        date = re.search(r'\d{4}-\d{2}-\d{2}', message[0])
+        date = datetime.strptime(date.group(), '%Y-%m-%d').date()
+        time = re.search(r'\d{2}:\d{2}:\d{2}', message[0])
+        time = datetime.strptime(time.group(), '%H:%M:%S').time()
 
-    time = re.search(r'\d{2}:\d{2}:\d{2}', log_message)
-    time = datetime.strptime(time.group(), '%H:%M:%S').time()
+        date, start, end = Analyzer.filter_date(date, time, days=2, minutes=30)
 
-    reference = re.search(r'[a-f,0-9]{22}$', info[0])
+        reference = re.search(r'[a-f,0-9]{22}$', info[0])
 
-    try:
-        reference = reference.group()
-        text = ("🕛 {TIME}\nStatus: {STATUS} ✔️\nReference: {REFERENCE}".format(TIME=time, STATUS=status, REFERENCE=reference))
-    except:
-        text = ("🕛 {TIME}\nStatus: {STATUS} ❌\n{INFO}".format(TIME=time, STATUS=status, INFO=info[0] + " " + info[1]))
-
-    return text
-
-def analyze_date(timestamp):
-    '2020-11-28 09:48:17+01:00'
-    date = re.search(r'\d{4}-\d{2}-\d{2}', timestamp)
-    date = datetime.strptime(date.group(), '%Y-%m-%d').date()
-    time = re.search(r'\d{2}:\d{2}:\d{2}', timestamp)
-    time = datetime.strptime(time.group(), '%H:%M:%S').time()
-    return date, time
-
-def filter_date(date, time):
-    # Add n days to current date, check if we have to change the month or the year
-    try:
-        date = date.replace(day=date.day + 2)
-    except:
-        max_days = monthrange(date.year, date.month)[1]
-
-        day = (date.day + 2) - max_days
+        time = '{DATE}: {START} - {END}'.format(DATE=date, START=start, END=end)
 
         try:
-            date = date.replace(day=day, month=date.month + 1)
+            reference = reference.group()
+            text = ('🕛 {TIME}\nStatus: {STATUS} ✔️\nReference: {REFERENCE}'.format(TIME=time, STATUS=status, REFERENCE=reference))
         except:
-            date = date.replace(day=day, month=1, year=date.year + 1)
+            text = ('🕛 {TIME}\nStatus: {STATUS} ❌\n{INFO}'.format(TIME=time, STATUS=status, INFO=info[0] + " " + info[1]))
 
+        return text
 
-    # Set the end time to 00 or 30 minutes, depending of which one is closer to the current time
-    i = int(time.minute / 30)
+    @staticmethod
+    def analyze_references(log_references, today, start, end):
+        log_references = list(filter(('===================================').__ne__, log_references))
 
-    end = time.replace(minute=i*30, second=00)
+        references = []
 
-    # Get the start time, substracting 30 minutes to the end time
-    try:
-        start = end.replace(minute=end.minute - 30)
-    except:
-        start = end.replace(hour=end.hour - 1, minute=(end.minute - 30)%60)
+        for index in range(0, len(log_references), 3):
+            date = datetime.strptime(log_references[index], '%Y-%m-%d').date()
+            time = datetime.strptime(log_references[index + 1], '%H:%M:%S').time()
 
-    return date, start, end
+            if date == today:
+                if start <= time <= end:
+                    references.append(log_references[index + 2])
 
-'''
-command = "date --rfc-3339=s"
+        return references
 
-#command = "date -d @1577665080 --rfc-3339=s"
-
-timestamp = delegator.run(command).out
-
-date, time = analyze_date(timestamp)
-
-print(date, time)
-
-date, start, end = filter_date(date, time)
-
-print(date, start, end)
-'''
