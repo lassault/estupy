@@ -30,7 +30,7 @@ class Analyzer:
                 start = end.replace(hour=end.hour - hours, minute=end.minute - minutes)
             except:
                 start = end.replace(hour=end.hour - hours - 1, minute=(end.minute - minutes) % 60)
-                
+
         except:
             end = time.replace(minute=00, second=00)
             start = end.replace(hour=end.hour - hours)
@@ -79,7 +79,8 @@ class Analyzer:
 
             if date == today:
                 if start <= time <= end:
-                    references.append(log_references[index + 2])
+                    if ((log_references[index + 2]) not in references):
+                        references.append(log_references[index + 2])
 
         return references
 
