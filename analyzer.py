@@ -1,5 +1,3 @@
-from calendar import month, monthrange
-from os import stat
 import re
 from datetime import datetime
 from calendar import monthrange
@@ -7,7 +5,7 @@ from calendar import monthrange
 class Analyzer:
 
     @staticmethod
-    def filter_date(date, time, days, minutes):
+    def filter_date(date, time, days, hours, minutes):
         # Add n days to current date, check if we have to change the month or the year
         try:
             date = date.replace(day=date.day + days)
@@ -22,23 +20,28 @@ class Analyzer:
                 date = date.replace(day=day, month=1, year=date.year + 1)
 
         # Set the end time to 00 or 30 minutes, depending of which one is closer to the current time
-        i = int(time.minute / minutes)
-
-        end = time.replace(minute=i*minutes, second=00)
-
-        # Get the start time, substracting 30 minutes to the end time
         try:
-            start = end.replace(minute=end.minute - minutes)
+            i = int(time.minute / minutes)
+
+            end = time.replace(minute=i*minutes, second=00)
+
+            # Get the start time, substracting 30 minutes to the end time
+            try:
+                start = end.replace(hour=end.hour - hours, minute=end.minute - minutes)
+            except:
+                start = end.replace(hour=end.hour - hours - 1, minute=(end.minute - minutes) % 60)
+                
         except:
-            start = end.replace(hour=end.hour - 1, minute=(end.minute - minutes) % 60)
-        
+            end = time.replace(minute=00, second=00)
+            start = end.replace(hour=end.hour - hours)
+
         return date, start, end
 
     @staticmethod
     def analyze_log(message):
         message = message.rstrip().split('\n')
         try:
-            message.remove("===================================")
+            message.remove('===================================')
         except:
             pass
 

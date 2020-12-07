@@ -1,16 +1,18 @@
 import datetime
 import delegator
 import re
+import errors
+
 
 from analyzer import Analyzer
 
 class Worker:
 
     @staticmethod
-    def get_date_range(reference_mode):
+    def get_date_range(mode):
         today = datetime.date.today()
 
-        if reference_mode:
+        if mode is 'reference':
             try:
                 time = datetime.time(
                 hour=datetime.datetime.now().time().hour,
@@ -24,9 +26,9 @@ class Worker:
                     second=datetime.datetime.now().time().second
                 )
 
-            date, start, end = Analyzer.filter_date(today, time, days=0, minutes=15)
+            date, start, end = Analyzer.filter_date(today, time, days=0, hours=0, minutes=15)
 
-        else:
+        elif mode is 'update':
 
             time = datetime.time(
                 hour=datetime.datetime.now().time().hour,
@@ -34,16 +36,25 @@ class Worker:
                 second=datetime.datetime.now().time().second
             )
 
-            date, start, end = Analyzer.filter_date(today, time, days=2, minutes=30)
+            date, start, end = Analyzer.filter_date(today, time, days=2, hours=3, minutes=00)
+
+        else:
+            time = datetime.time(
+                hour=datetime.datetime.now().time().hour,
+                minute=datetime.datetime.now().time().minute,
+                second=datetime.datetime.now().time().second
+            )
+
+            date, start, end = Analyzer.filter_date(today, time, days=2, hours=0, minutes=30)
 
         return date, start, end
 
     @staticmethod
-    def get_references(estupy):
+    def get_references(estupy, mode):
         command = 'cat {REFERENCES_LOG}'.format(REFERENCES_LOG=estupy.references_log)
         log_references = delegator.run(command).out.rsplit()
 
-        today, start, end = Worker.get_date_range(True)
+        today, start, end = Worker.get_date_range(mode)
 
         references = Analyzer.analyze_references(log_references, today, start, end)
 
@@ -51,21 +62,19 @@ class Worker:
 
     @staticmethod
     def get_details(response, estupy):
-        created = response.find('div', {'id': 'created-message'})
         try:
+            created = response.find('div', {'id': 'created-message'})
             log_file = estupy.std_log
-            date = datetime.date.today()
+            date, start, end = Worker.get_date_range(None)
             time = datetime.time(
                 hour=datetime.datetime.now().time().hour,
                 minute=datetime.datetime.now().time().minute,
                 second=00
             )
 
-            #print(created.text)
             reference = response.find('div', {'id': 'reference-number'})
-            #print(reference.text)
 
-            Worker.write_to_logs(log_file=estupy.std_log, date=date, time=time, text=created.text + '\n' + reference.text)
+            Worker.write_to_logs(log_file=estupy.std_log, date=date, time=end, text=created.text + '\n' + reference.text)
 
             reference_number = re.search(r'[a-f,0-9]{22}$', reference.text).group()
 
@@ -86,6 +95,9 @@ class Worker:
             )
 
             Worker.write_to_logs(log_file, date, time, text=failed.text + '\n' + error.text)
+
+            raise errors.ErrorMessage
+    
 
 
     @staticmethod

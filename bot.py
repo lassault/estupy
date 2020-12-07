@@ -106,7 +106,7 @@ async def send_error(message: types.Message):
         try:
             text = Analyzer.analyze_log(log)
         except:
-            text = 'Todavia no se ha producido ningun error...\nIgual es necesaria alguna revision'
+            text = '⚠️ Todavia no se ha producido ningun error\nIgual es necesaria alguna comprobacion...'
 
         await message.reply(text)
 
