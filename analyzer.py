@@ -53,7 +53,7 @@ class Analyzer:
         time = re.search(r'\d{2}:\d{2}:\d{2}', message[0])
         time = datetime.strptime(time.group(), '%H:%M:%S').time()
 
-        date, start, end = Analyzer.filter_date(date, time, days=2, minutes=30)
+        date, start, end = Analyzer.filter_date(date, time, days=2, hours=00, minutes=30)
 
         reference = re.search(r'[a-f,0-9]{22}$', info[0])
 

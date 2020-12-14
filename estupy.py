@@ -1,8 +1,5 @@
-from analyzer import Analyzer
-from datetime import datetime
 import settings
 import requests
-
 import errors
 
 from worker import Worker
@@ -111,7 +108,7 @@ class Estupy:
                 except ValueError:
                     raise errors.WrongLogin('Wrong login or endpoint')
                     #print('Wrong login or endpoint')
-        except errors.ErrorMessage:
+        except errors.ResponseMessageError:
             raise errors.UnableToReservate('Unable to reservate')
 
     def make_checkin(self):
@@ -121,8 +118,8 @@ class Estupy:
             raise errors.EmptyReferences('No references')
 
         try:
-
             for reference in references:
+                
                 payload = {
                     'email': self.email,
                     'password': self.password,
@@ -188,9 +185,12 @@ class Estupy:
                             action = 'checkin'
 
                         if checkout_button is not None:
-                            action = 'checkout'
+                            pass
+                            #action = 'checkout'
 
                         if action is None:
+                            #print(reference)
+                            #continue
                             raise errors.InvalidReference('Invalid reference: {REFERENCE}'.format(REFERENCE=reference))
 
                         self.checkin.format(ACTION=action)
@@ -203,13 +203,17 @@ class Estupy:
 
                         Worker.get_details(response, self)
 
+                    except errors.ResponseMessageError:
+                        continue
+
                     except errors.InvalidReference:
                         raise errors.InvalidReference('Invalid reference: {REFERENCE}'.format(REFERENCE=reference))
                         #print('Invalid reference')
                     except ValueError:
-                        raise errors.WrongLogin('Wrong login or endpoint')
+                        raise errors.InvalidReference('Invalid reference: {REFERENCE}'.format(REFERENCE=reference))
+                        #raise errors.WrongLogin('Wrong login or endpoint')
                         #print('Wrong login or endpoint')
-        except errors.ErrorMessage:
+        except errors.ResponseMessageError:
             raise errors.UnableToCheckin('Unable to make checkin')
         #except errors.EmptyReferences:
             #pass
@@ -217,7 +221,6 @@ class Estupy:
 
     def make_update(self):
         references = Worker.get_references(self, 'update')
-        #print(references)
 
         if not references:
             raise errors.EmptyReferences('No references')
@@ -293,17 +296,21 @@ class Estupy:
 
                         Worker.get_details(response, self)
                     
+                    except errors.ResponseMessageError:
+                        continue
+
 
                     except errors.InvalidReference:
                         raise errors.InvalidReference('Invalid reference: {REFERENCE}'.format(REFERENCE=reference))
                         #print('Invalid reference')
                     except ValueError:
-                        raise errors.WrongLogin('Wrong login or endpoint')
+                        raise errors.InvalidReference('Invalid reference: {REFERENCE}'.format(REFERENCE=reference))
+                        #raise errors.WrongLogin('Wrong login or endpoint')
                         #print('Wrong login or endpoint')
             #except errors.EmptyReferences:
                 #pass
                 #print('Empty references')
-        except errors.ErrorMessage:
+        except errors.ResponseMessageError:
             raise errors.UnableToUpdate('Unable to update')
 
         #print('Updating last reservation...')

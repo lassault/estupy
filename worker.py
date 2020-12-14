@@ -96,7 +96,7 @@ class Worker:
 
             Worker.write_to_logs(log_file, date, time, text=failed.text + '\n' + error.text)
 
-            raise errors.ErrorMessage
+            raise errors.ResponseMessageError
     
 
 

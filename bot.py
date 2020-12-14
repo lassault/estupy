@@ -58,7 +58,7 @@ async def make_reservation(message: types.Message):
     if str(user_id) not in USER_ID:
         await message.answer_animation('https://media.giphy.com/media/xT5LMNO5vF6dBrxY3e/giphy.gif')
     else:
-        command = 'python3.7 $HOME/estupy/estupy.py'
+        command = 'python3.7 $HOME/estupy/main.py'
 
         delegator.run(command)
 
