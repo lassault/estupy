@@ -5,14 +5,12 @@ from estupy import Estupy
 
 estupy = Estupy()
 
-'''
 try:
-    SITIO = int(sys.argv[2])
-    ZONA = int(sys.argv[3])
-    estupy.update(SITIO, ZONA)
+    estupy.sitio = int(sys.argv[1])
+    estupy.zona = int(sys.argv[2])
+    #print('Sitio:{SITIO} Zona:{ZONA}'.format(SITIO=estupy.sitio, ZONA=estupy.zona))
 except:
     pass
-'''
 
 try:
     print('Trying to checkin...')
@@ -49,7 +47,6 @@ else:
             print('Reservation done!')
     else:
         print('Update done!')
-
 
 '''
 try:

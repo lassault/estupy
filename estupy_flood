@@ -8,7 +8,7 @@ ZONA=18
 for SITIO in {237..162}
 do
 	echo "Sitio:$SITIO Zona:$ZONA"
-	#python3.7 $HOME/estupy/estupy.py $SITIO $ZONA
+	#python3.7 $HOME/estupy/main.py $SITIO $ZONA
 done
 echo
 
@@ -20,7 +20,7 @@ ZONA=19
 for SITIO in {367..292}
 do
 	echo "Sitio:$SITIO Zona:$ZONA"
-	#python3.7 $HOME/estupy/estupy.py $SITIO $ZONA
+	#python3.7 $HOME/estupy/main.py $SITIO $ZONA
 done
 echo
 
@@ -32,7 +32,7 @@ ZONA=8
 for SITIO in {161..108}
 do
 	echo "Sitio:$SITIO Zona:$ZONA"
-	#python3.7 $HOME/estupy/estupy.py $SITIO $ZONA
+	#python3.7 $HOME/estupy/main.py $SITIO $ZONA
 done
 echo
 
@@ -44,7 +44,7 @@ ZONA=9
 for SITIO in {291..238}
 do
 	echo "Sitio:$SITIO Zona:$ZONA"
-	#python3.7 $HOME/estupy/estupy.py $SITIO $ZONA
+	#python3.7 $HOME/estupy/main.py $SITIO $ZONA
 done
 echo
 
@@ -56,7 +56,7 @@ ZONA=7
 for SITIO in {107..58}
 do
 	echo "Sitio:$SITIO Zona:$ZONA"
-	#python3.7 $HOME/estupy/estupy.py $SITIO $ZONA
+	#python3.7 $HOME/estupy/main.py $SITIO $ZONA
 done
 echo
 
@@ -68,5 +68,5 @@ ZONA=10
 for SITIO in {414..368}
 do
 	echo "Sitio:$SITIO Zona:$ZONA"
-	#python3.7 $HOME/estupy/estupy.py $SITIO $ZONA
+	#python3.7 $HOME/estupy/main.py $SITIO $ZONA
 done
