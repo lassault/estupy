@@ -1,1 +1,1 @@
-*/30 8-21 * * * python3.7 $HOME/estupy/main.py 2>>$HOME/estupy/estupy.err
+*/30 8-21 * * * python3.7 $HOME/estupy/main.py >> $HOME/estupy/aux.txt 2>>$HOME/estupy/estupy.err

@@ -19,7 +19,9 @@ except:
     print('Failed to checkin')
     print('Trying to update...')
     try:
+        #estupy.make_reservation()
         estupy.make_update()
+        estupy.make_reservation()
     except:
         print('Failed to update')
         print('Trying to reservate...')
