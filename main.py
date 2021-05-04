@@ -8,6 +8,7 @@ estupy = Estupy()
 try:
     estupy.sitio = int(sys.argv[1])
     estupy.zona = int(sys.argv[2])
+    estupy.references_log = str(sys.argv[3])
     #print('Sitio:{SITIO} Zona:{ZONA}'.format(SITIO=estupy.sitio, ZONA=estupy.zona))
 except:
     pass
