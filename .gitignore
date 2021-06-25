@@ -1,0 +1,4 @@
+.env
+*.bak
+__pycache__
+references.json
