@@ -15,20 +15,20 @@ class Worker:
         # To operate with timedelta, you must use a datetime object, thats the reason of using datetime.combine() function
         #day = day.date() -> Should I store the day as a datetime object or as a date object? 🤔
 
-        # I need to do this so I can properly have the start and end time if I try to checkin
+        # I need to do this so I can properly have the start and end time if I try to 'checkin'
         if end < start:
             start, end = end, start
 
         return day, start, end
 
     @staticmethod
-    def get_references(day, start, end):
-        file = open('references.json', 'r')
+    def get_references(day, start, end, filename):
+        file = open(filename, 'r')
         references = json.loads(file.read())
         file.close()
 
         # Firstly, we filter the references by date
-        references = list(filter(lambda reference: datetime.strptime(reference['day'], '%Y-%m-%d').date() == day.date(), references))
+        references = list(filter(lambda reference: datetime.strptime(reference['day'], '%Y-%m-%d').date() == day.date(), references.values()))
 
         # Secondly, we get the references with a start time between the time range we have calculated before
         references = list(filter(lambda reference: datetime.strptime(reference['start'], '%H:%M:%S').time() >= start, references))
@@ -36,9 +36,8 @@ class Worker:
         return references
 
     @staticmethod
-    def write_reference(reference, date, start, end):
-        # TODO: Currently, I'm appending the new values instead of updating the ones that are already listed
-        day = date.date().strftime('%Y-%m-%d')
+    def write_reference(reference, day, start, end, filename):
+        day = day.date().strftime('%Y-%m-%d')
         start = start.strftime('%H:%M:%S')
         end = end.strftime('%H:%M:%S')
 
@@ -49,12 +48,16 @@ class Worker:
             'end': end
         }
 
-        file = open('references.json', 'rw')
+        file = open(filename, 'r')
 
         references = json.loads(file.read())
 
-        references.append(detail)
+        file.close()
 
-        json.dump(references, file)
+        references[reference] = detail
+
+        file = open(filename, 'w')
+        #json.dump(references, file) -> Use this if you don't want to store the references in a pretty mode
+        json.dump(references, file, indent='\t', separators=(',', ': '), ensure_ascii=False)
 
         file.close()

@@ -1,12 +1,12 @@
 from bs4 import BeautifulSoup
 
 import re
+import logging
 
 class Parser:
 
     @staticmethod
     def get_reservation_params(petition):
-        # TODO: Review the exceptions
         parser = BeautifulSoup(petition.text, 'lxml')
 
         try:
@@ -55,32 +55,24 @@ class Parser:
 
         except ValueError:
             error = parser.find('div', {'class': 'error'})
-            print(error.text)
-            raise ValueError
+            error = error.text.split('\n')[1]
+            raise ValueError(error.replace('\n', ''))
 
     @staticmethod
     def get_reference(petition):
-        # TODO: Properly deal with this, I'm not catching the exceptions
-
         response = BeautifulSoup(petition.text, 'lxml')
 
         try:
-            #reference = re.search(r'[a-f,0-9]{22}$', response.find('div', {'id': 'reference-number'}).text).group()
-            reference = response.find('div', {'id': 'reference-number'})
-            reference = re.search(r'[a-f,0-9]{22}$', reference.text).group()
-            #reference_text = response.find('div': {'id': 'reference-number'})
-            #reference = re.search(r'[a-f,0-9]{22}$', reference_text.text).group()
+            reference = re.search(r'[a-f,0-9]{22}$', response.find('div', {'id': 'reference-number'}).text).group()
             return reference
-        except ValueError:
-            failed = response.find('div', {'id': 'failed-message'})
+        except AttributeError:
             error = response.find('div', {'class': 'error'})
-
-            print(failed.text, error.text, sep='')
-            raise ValueError
+            raise ValueError(error.text.replace('\n', ''))
 
     @staticmethod
     def get_details(petition):
         # TODO: This function has to be tested
+        # It's used when executing the 'checkin' option
         response = BeautifulSoup(petition.text, 'lxml')
 
         try:
@@ -89,6 +81,6 @@ class Parser:
             reference = response.find('div', {'id': 'reference-number'})
 
             reference = re.search(r'[a-f,0-9]{22}$', reference.text).group()
-        except:
-            failed = response.find('div', {'id': 'failed-message'})
+        except AttributeError:
             error = response.find('div', {'class': 'error'})
+            raise ValueError(error.text.replace('\n', ''))
