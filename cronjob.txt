@@ -1,0 +1,7 @@
+*/30 8-21 * * * python3.7 $HOME/estupy/main.py >> $HOME/estupy/aux.txt 2>>$HOME/estupy/estupy.err
+
+# With custom site
+*/30 9-13 * * 1-3,6-7 python3.7 $HOME/estupy/main.py <SITIO_ID> <ZONA_ID>
+
+# With custom reference file
+*/30 9-13 * * 1-3,6-7 python3.7 $HOME/estupy/main.py <SITIO_ID> <ZONA_ID> <FILE_NAME>
