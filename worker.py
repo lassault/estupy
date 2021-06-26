@@ -57,7 +57,7 @@ class Worker:
         references[reference] = detail
 
         file = open(filename, 'w')
-        #json.dump(references, file) -> Use this if you don't want to store the references in a pretty mode
-        json.dump(references, file, indent='\t', separators=(',', ': '), ensure_ascii=False)
+        json.dump(references, file) # Use this if you don't want to store the references in a pretty mode
+        #json.dump(references, file, indent='\t', separators=(',', ': '), ensure_ascii=False)
 
         file.close()
