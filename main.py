@@ -4,6 +4,7 @@ from parser import Parser
 from worker import Worker
 
 import logging
+import settings
 import sys
 
 # NOTE: You must have the 'references.json' file created and it must have an empty JSON on it. -> {}
@@ -26,9 +27,9 @@ except:
 
 # We give the option to choose the log file via the args
 try:
-    logging.basicConfig(filename=str(sys.argv[4]), format='(%(asctime)s) %(levelname)s:%(message)s', datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
+    logging.basicConfig(filename='{PATH}/estupy/{FILE}'.format(PATH=settings.PAHT, FILE=str(sys.argv[4])), format='(%(asctime)s) %(levelname)s:%(message)s', datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
 except:
-    logging.basicConfig(filename='estupy.log', format='(%(asctime)s) %(levelname)s:%(message)s', datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
+    logging.basicConfig(filename=settings.LOG_FILE, format='(%(asctime)s) %(levelname)s:%(message)s', datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
 
 # Second, we get the time range inside we can update references and we get the references in that time range
 estupy.day, estupy.start, estupy.end = Worker.get_time_range(days=2, hours=3, minutes=00)
